@@ -9,6 +9,7 @@ draw = trtl.Turtle()
 ball = trtl.Turtle()
 sand_one = trtl.Turtle()
 sand_two = trtl.Turtle()
+sand_three = trtl.Turtle()
 pond_one = trtl.Turtle()
 pond_two = trtl.Turtle()
 hole = trtl.Turtle()
@@ -36,6 +37,7 @@ def move(turtle, xx, yy):
 
 def draw_map_one():
     pond_two.hideturtle()
+    sand_three.hideturtle()
 
     move(ball, -300, -200)
     move(hole, 300, 200)
@@ -68,16 +70,65 @@ def draw_map_one():
     draw.fd(100)
     draw.rt(90)
     draw.fd(100)
+    
+    draw.hideturtle()
+
+def draw_map_three():
+    sand_three.hideturtle()
+
+    move(ball, 0, -200)
+    move(hole, -300, 180)
+    move(sand_one, 130, -15)
+    move(sand_two, -20, 190)
+    move(pond_one, 240, -200)
+    move(pond_two, 0, -100)
+    move(draw, -100, -250)
+
+    draw.lt(90)
+    draw.fd(200)
+    for i in range(4):
+        draw.lt(22.5)
+        if i > 2:
+            draw.fd(100)
+        else:
+            draw.fd(75)
+
+    draw.rt(90)
+    draw.fd(150)
+    draw.rt(90)
+
+    draw.fd(250)
+    draw.rt(90)
+    draw.fd(100)
+    draw.bk(100)
+    draw.lt(90)
+    draw.fd(450)
+    draw.rt(90)
+    draw.fd(500)
+    draw.rt(90)
+    draw.fd(450)
+
+    draw.rt(90)
+    draw.fd(200)
+    for i in range(4):
+        draw.rt(22.5)
+        if i > 2:
+            draw.fd(100)
+        else:
+            draw.fd(75)
+
 
 
 # game
 draw_turtle(ball, "golf_ball.gif")
 draw_turtle(sand_one, "sand.gif")
 draw_turtle(sand_two, "sand.gif")
+draw_turtle(sand_three, "sand.gif")
 draw_turtle(pond_one, "pond.gif")
 draw_turtle(pond_two, "pond.gif")
 draw_turtle(hole, "hole.gif")
 
-draw_map_one()
+#draw_map_one()
+draw_map_three()
 
 wn.mainloop()
