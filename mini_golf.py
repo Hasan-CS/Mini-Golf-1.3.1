@@ -5,7 +5,9 @@ import random as rand
 wn = trtl.Screen()
 
 ### initialization
-greeting = wn.textinput("Welcome to Golf Game!", "Use the user inputs to move the ball and click the ball to reset it! Type 'ok' to begin: ")
+greeting = wn.textinput("Welcome to Golf Game!", '''Use the user inputs to move the ball and click the ball to reset it!
+ If you hit sand, then a hit is added to your score, and if you fall
+  in a pond the ball goes back to the starting point! Type 'ok' to begin: ''')
 
 # Creation of all the objects(turtles) in the game
 draw = trtl.Turtle()
@@ -17,6 +19,12 @@ sand_four = trtl.Turtle()
 pond_one = trtl.Turtle()
 pond_two = trtl.Turtle()
 hole = trtl.Turtle()
+counter = trtl.Turtle()
+score_writer = trtl.Turtle()
+
+all_turtles = [draw, ball, sand_one, sand_two, sand_three, sand_four, pond_one, pond_two, hole, counter, score_writer]
+for turtles in all_turtles:
+    turtles.speed(0)
 
 # All game images - this section also sets up background color, sizes and speed
 wn.addshape("golf_ball.gif")
@@ -27,34 +35,35 @@ wn.addshape("hole.gif")
 wn.bgcolor("#9BBC49")
 wn.setup(800, 600)
 
-draw.speed(7)
 draw.pensize(5)
 ball.speed(2)
 
+### variables and lists
 # Different maps list + variable that stores a random map
 map_list = ["m_one", "m_two", "m_three", "m_four"]
 which_map = rand.choice(map_list)
 
-# countdown setup (variables required for the timer to work)
+# pre-setup (variables required for the timer and score to work)
 font_setup = ("Arial", 20, "normal")
 timer = 100
 counter_interval = 1000   
 timer_up = False
+score = 0
 
-# setting up the countdown turtle
-counter = trtl.Turtle()
-counter.color("white")
-counter.penup()
-counter.goto(-300, 255)
+# setting up the countdown and score turtle
+counter.hideturtle(), score_writer.hideturtle()
+counter.color("white"), score_writer.color("white")
+counter.penup(), score_writer.penup()
+counter.goto(-300, 255), score_writer.goto(-150, 255)
 
 ### fuctions
-# this is the function used when the ball is clicked on, it returns to the starting spot based on which map is chosen
+# this is the function used when the ball is clicked, it returns to the starting spot based on which map is chosen
 def return_home(x, y):
     global which_map
     if which_map == "m_one":
         move(ball, -300, -200)
     if which_map == "m_two":
-         move(ball, 250, 300)
+        move(ball, 250, 200)
     if which_map == "m_three":
         move(ball, 0, -200)
     if which_map == "m_four":
@@ -71,6 +80,13 @@ def move(turtle, xx, yy):
     turtle.goto(xx, yy)
     turtle.pendown()
 
+# this is a basic function that updates the score
+def update_score(): 
+    global score
+    score += 1
+    score_writer.clear()
+    score_writer.write("Score: " + str(score), font=font_setup)
+
 # this is the function used to move the ball around    
 def golf_hit():
     ball.penup()
@@ -85,6 +101,44 @@ def golf_hit():
     
     ball.seth(int(power_and_direction[1]))   
     ball.fd(int(power_and_direction[0])*40)
+    sand_check() # the sand check and pond check (later created) are both intregrated into the golf hit function, as well as update score
+    pond_check()
+    update_score() 
+    
+
+# this function checks if the ball is near sand, and tells it what to do if it is.
+def sand_check():
+    global which_map
+    if which_map == "m_one" or "m_two" or "m_three":
+        sand_list = [sand_one, sand_two]
+    else:
+        sand_list = [sand_one, sand_two, sand_three, sand_four]
+    
+    for turtles in sand_list:
+        if ball.xcor() <= turtles.xcor() + 50 and ball.xcor() >= turtles.xcor() - 50:
+            if ball.ycor() <= turtles.ycor() + 50 and ball.ycor() >= turtles.ycor() - 50:
+                update_score()
+
+# this function checks if the ball is near a pond, and tells it what to do if it is.
+def pond_check():
+    global which_map
+    if which_map == "m_two" or "m_three" or "m_four":
+        pond_list = [pond_one, pond_two]
+    else:
+        pond_list = [pond_one]
+    
+    for turtles in pond_list:
+        if ball.xcor() <= turtles.xcor() + 50 and ball.xcor() >= turtles.xcor() - 50:
+            if ball.ycor() <= turtles.ycor() + 50 and ball.ycor() >= turtles.ycor() - 50:
+
+                if which_map == "m_one":   # this is just the "return home" function, but without the required parameters (the x and y coordinates of the click)
+                    move(ball, -300, -200)
+                if which_map == "m_two":
+                    move(ball, 250, 200)
+                if which_map == "m_three":
+                     move(ball, 0, -200)
+                if which_map == "m_four":
+                    move(ball, 0, -100)
 
 # creation of the countdown timer using the varaibles set at the beginning, the "counter" writes it by the top left
 def countdown():
@@ -98,9 +152,9 @@ def countdown():
     counter.write("Timer: " + str(timer), font=font_setup)
     timer -= 1
     counter.getscreen().ontimer(countdown, counter_interval)
-
-# Creation of all the maps
-def draw_map_one():
+    
+# creation of all the maps, note that we are drawing precise shapes and it is condensed as possible
+def draw_map_one(): # start of map one
     pond_two.hideturtle()
     sand_three.hideturtle()
     sand_four.hideturtle()
@@ -140,7 +194,7 @@ def draw_map_one():
     
     draw.hideturtle()
 
-def draw_map_two():
+def draw_map_two(): # start of map two
    
     sand_three.hideturtle()
     sand_four.hideturtle()
@@ -178,9 +232,9 @@ def draw_map_two():
     draw.goto(20, 125)
     draw.pendown()
     draw.bk(200)
-    
+    draw.hideturtle()
 
-def draw_map_three():
+def draw_map_three():  # start of map three
     sand_three.hideturtle()
     sand_four.hideturtle()
     draw.color("#FF7800")
@@ -225,8 +279,9 @@ def draw_map_three():
             draw.fd(100)
         else:
             draw.fd(75)
-
-def draw_map_four():
+    draw.hideturtle()
+    
+def draw_map_four():  # start of map four
 
     draw.color("#E40010")
 
@@ -261,8 +316,11 @@ def draw_map_four():
         draw.rt(90)
         draw.fd(700)
         draw.rt(90)
+    draw.hideturtle()
 
-def choose_map():
+### game
+# based on what "which map" is, the function selects to draw a random map out of four
+def choose_map():  
     global which_map
     if which_map == "m_one":
         draw_map_one()
@@ -274,7 +332,7 @@ def choose_map():
         draw_map_four()
 
 
-# Assiagning each of the turtles to an image (for their shape) and creating the map all after the user inputs "ok"
+# assigning each of the turtles to an image (for their shape) and creating the map all after the user inputs "ok"
 if greeting == "ok":
 
     draw_turtle(ball, "golf_ball.gif")
@@ -286,11 +344,18 @@ if greeting == "ok":
     draw_turtle(pond_two, "pond.gif")
     draw_turtle(hole, "hole.gif")
 
-    choose_map()
+    choose_map() # selecting the map
+    countdown() # starting the timer, until the timer ends you can hit the ball and reset it
 
-    countdown()
     while timer_up == False:
         golf_hit()
         ball.onclick(return_home)
+
+        if ball.xcor() <= hole.xcor() + 30 and ball.xcor() >= hole.xcor() - 30:
+            if ball.ycor() <= hole.ycor() + 30 and ball.ycor() >= hole.ycor() - 30:
+                counter.penup(), counter.clear, counter.hideturtle()
+                score_writer.clear()
+                score_writer.write("You Win! Score: " + str(score), font=font_setup)
+                timer = 0
 
 wn.mainloop() 
