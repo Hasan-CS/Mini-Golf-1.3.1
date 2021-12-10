@@ -6,8 +6,8 @@ wn = trtl.Screen()
 
 ### initialization
 greeting = wn.textinput("Welcome to Golf Game!", '''Use the user inputs to move the ball and click the ball to reset it!
- If you hit sand, then a hit is added to your score, and if you fall
-  in a pond the ball goes back to the starting point! Type 'ok' to begin: ''')
+If you hit sand, then a hit is added to your score, and if you fall
+in a pond the ball goes back to the starting point! Type 'ok' to begin: ''')
 
 # Creation of all the objects(turtles) in the game
 draw = trtl.Turtle()
@@ -154,7 +154,7 @@ def countdown():
     counter.getscreen().ontimer(countdown, counter_interval)
     
 # creation of all the maps, note that we are drawing precise shapes and it is condensed as possible
-def draw_map_one(): # start of map one
+def draw_map_one(): # start of map one (this map draws kind of a long, skinny rectangle that is connected to a tall, wide rectange - and there is a squarish piece taken off of top0left of the latter rectangle)
     pond_two.hideturtle()
     sand_three.hideturtle()
     sand_four.hideturtle()
@@ -194,7 +194,7 @@ def draw_map_one(): # start of map one
     
     draw.hideturtle()
 
-def draw_map_two(): # start of map two
+def draw_map_two(): # start of map two (this map draws a very wide rectangle with a semi-circle chipped off of it from the top - there is also a wall in the center reaching from the top down)
    
     sand_three.hideturtle()
     sand_four.hideturtle()
@@ -234,7 +234,7 @@ def draw_map_two(): # start of map two
     draw.bk(200)
     draw.hideturtle()
 
-def draw_map_three():  # start of map three
+def draw_map_three():  # start of map three (this map draws almost an upside-down boot - and there is a barrier reaching out from about where your ankle would be)
     sand_three.hideturtle()
     sand_four.hideturtle()
     draw.color("#FF7800")
@@ -281,7 +281,7 @@ def draw_map_three():  # start of map three
             draw.fd(75)
     draw.hideturtle()
     
-def draw_map_four():  # start of map four
+def draw_map_four():  # start of map four (this map draws a large rectangle with two barriers reaching out from it - and an X in the center)
 
     draw.color("#E40010")
 
@@ -316,9 +316,9 @@ def draw_map_four():  # start of map four
         draw.rt(90)
         draw.fd(700)
         draw.rt(90)
+
     draw.hideturtle()
 
-### game
 # based on what "which map" is, the function selects to draw a random map out of four
 def choose_map():  
     global which_map
@@ -331,7 +331,7 @@ def choose_map():
     if which_map == "m_four":
         draw_map_four()
 
-
+### game
 # assigning each of the turtles to an image (for their shape) and creating the map all after the user inputs "ok"
 if greeting == "ok":
 
